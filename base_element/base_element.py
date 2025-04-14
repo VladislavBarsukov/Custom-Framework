@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebElement
 
+
 class BaseElement:
     DEFAULT_TIMEOUT = 10
 
@@ -91,7 +92,7 @@ class BaseElement:
     def js_click(self):
         element = self.wait_for_presence()
         Logger.info(f"{self}; js_click")
-        self.browser.execute_script("argument[0].click()", element)
+        self.browser.execute_script("arguments[0].click()", element)
 
     def get_text(self):
         element = self.wait_for_presence()
@@ -115,6 +116,17 @@ class BaseElement:
         Logger.info(f"{self}: attribute '{name}' = '{value}'")
         return value
 
+    def get_src(self):
+        Logger.info(f"{self}: get_img_src")
+        try:
+            element = self.wait_for_presence()
+            src_value = element.get_attribute("src")
+            Logger.info(f"{self}: src = '{src_value}'")
+            return src_value
+        except WebDriverException as err:
+            Logger.error(f"{self}: {err}")
+            raise
+
     def get_css_property(self, name):
         element = self.wait_for_presence()
         Logger.info(f"{self}: get_css_property")
@@ -126,12 +138,22 @@ class BaseElement:
         Logger.info(f"{self}: attribute '{name}' = '{value}'")
         return value
 
-    def move_slider(self, x=0, y=0):
+    def move_slider(self, x, y):
         element = self.wait_for_clickable()
         Logger.info(f"{self}: move_slider")
         try:
             action = ActionChains(self.browser.driver)
-            action.click_and_hold(element).move_by_offset(x, y).perform()
+            action.click_and_hold(element).move_by_offset(x, y).release().perform()
+        except WebDriverException as err:
+            Logger.error(f"{self}: {err}")
+            raise
+
+    def move_to_element(self):
+        element = self.wait_for_presence()
+        Logger.info(f"{self}: move to element")
+        try:
+            action = ActionChains(self.browser.driver)
+            action.move_to_element(element).perform()
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
             raise

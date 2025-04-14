@@ -8,7 +8,7 @@ from browser.browser_factory import BrowserFactory, AvailableDriverName
 
 @pytest.fixture(scope="session")
 def browser():
-    driver = BrowserFactory.get_driver(AvailableDriverName.CHROME)
+    driver = BrowserFactory.get_driver(AvailableDriverName.CHROME, ["--start-maximized"])
     browser_instance = Browser(driver)
     yield browser_instance
     browser_instance.quit()

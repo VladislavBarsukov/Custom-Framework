@@ -32,7 +32,7 @@ class Browser:
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
             raise
-        self.main_handle = self._driver.current_window_handle  # уникальный идентификатор активного окна браузера
+        self.main_handle = self._driver.current_window_handle
 
     def close(self):
         Logger.info(f"{self}: close window handle = {self._driver.current_window_handle}")
@@ -63,22 +63,27 @@ class Browser:
         self._driver.refresh()
 
     def switch_to_default_window(self):
-        Logger.info(f"{self} switch")
+        Logger.info(f"{self} switch_to_default_window")
         try:
             self._driver.switch_to.window(self.main_handle)
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
             raise
 
-    def switch_to_window(self, title: str):
-        Logger.info(f"{self} switch to window {title}")
-        self._driver.switch_to.window(title)
-        if self._driver.title == title:
-            self.main_handle = self._driver.current_window_handle
-            Logger.info(f"{self}: now main_handle is {self.main_handle}")
-        else:
-            Logger.error(f"Wasn't found page with title {title}")
-            raise ValueError(f"Wasn't found page with title {title}")
+    def switch_to_default_content(self):
+        Logger.info(f"{self} switch_to_default_content")
+        self._driver.switch_to.default_content()
+
+    def switch_to_window(self, window_handle):
+        Logger.info(f"{self} switch to window {window_handle}")
+        self._driver.switch_to.window(window_handle)
+        self.main_handle = window_handle
+
+    def switch_to_windows(self, num: int):
+        Logger.info(f"{self} switch to window {num}")
+        switch = self._driver.window_handles[num]
+        self._driver.switch_to.window(switch)
+        self.main_handle = switch
 
     def make_dump(self):
         Logger.info(f"{self}: make_dump")
@@ -89,9 +94,9 @@ class Browser:
             os.makedirs("dumps")
         self._driver.save_screenshot(filepath)
 
-    #def switch_to_iframe(self, frame: BaseElement):
-    #    Logger.info(f"{self}: switch_to_iframe")
-    #    return self._driver.switch_to.frame(frame.wait_for_presense)
+    def switch_to_iframe(self, frame):
+        Logger.info(f"{self}: switch_to_iframe")
+        return self._driver.switch_to.frame(frame.wait_for_presence())
 
     def wait_alert_present(self):
         Logger.info(f"{self} wait_alert_present")
@@ -134,6 +139,14 @@ class Browser:
             Logger.warning("No alert was present when trying to send keys.")
         except TimeoutException:
             Logger.warning("Alert did not appear within the expected time.")
+
+    def go_back(self):
+        Logger.info(f"{self}: go back to previous page")
+        try:
+            self._driver.back()
+        except WebDriverException as err:
+            Logger.error(f"{self}: Error navigating back: {err}")
+            raise
 
     def __str__(self):
         return f"{self.__class__.__name__}{self._driver.session_id}"

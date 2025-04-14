@@ -1,5 +1,5 @@
 import pytest
-from pages.alert_page import AlertPage
+from pages.alert_js_page import AlertJsPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -8,7 +8,7 @@ def test_alerts(browser):
     url = "https://the-internet.herokuapp.com/javascript_alerts"
     text_for_prompt="alert"
     browser.get(url)
-    b = AlertPage(browser)
+    b = AlertJsPage(browser)
     get_js_alert = b.get_js_alert()
     assert get_js_alert=="You successfully clicked an alert", f"ERROR"
     get_js_confirm_ok = b.get_js_confirm_ok()
