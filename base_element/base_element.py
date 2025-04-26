@@ -157,3 +157,25 @@ class BaseElement:
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
             raise
+
+    def find_elements(self):
+        Logger.info(f"{self}: Counting elements with locator: {self.locator}")
+        element = self.wait_for_presence()
+        try:
+            elements = element.find_elements(*self.locator)
+            Logger.info(f"{self}: Found {elements} elements")
+            return elements
+        except WebDriverException as err:
+            Logger.error(f"{self}: Error finding elements: {err}")
+            raise
+
+    def get_location(self):
+        element = self.wait_for_presence()
+        Logger.info(f"{self}: get_location")
+        try:
+            location = element.location
+        except WebDriverException as err:
+            Logger.error(f"{self}: {err}")
+            raise
+        Logger.info(f"{self}: location = {location}")
+        return location

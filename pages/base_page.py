@@ -15,8 +15,8 @@ class BasePage:
         Logger.info(f"{self}: wait for open")
         self.unique_element.wait_for_presence()
 
-    def __str__(self)->str:
+    def __str__(self) -> str:
         return f"{self.__class__.__name__}[{self.page_name}]"
 
-    def __repr__(self)->str:
+    def __repr__(self) -> str:
         return str(self)

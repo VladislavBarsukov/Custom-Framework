@@ -13,11 +13,11 @@ class HooverPage(BasePage):
         super().__init__(browser)
         self.user_num = user_num
         self.user = WebElement(self.browser, f"(//*[@class='figure'])[{self.user_num}]",
-                               description="ContextPage -> figure button")
+                               description="HooverPage -> user element")
         self.user_name = WebElement(self.browser, f"//*[contains(text(), 'name: user{self.user_num}')]",
-                                 description="ContextPage -> figure button")
+                                    description="HooverPage -> user name")
         self.user_url = WebElement(self.browser, f"(//*[@href='/users/{self.user_num}'])",
-                                    description="ContextPage -> figure button")
+                                   description="HooverPage -> user url")
 
     def move_to(self):
         self.user.move_to_element()

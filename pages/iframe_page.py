@@ -25,11 +25,11 @@ class IframePage(BasePage):
     def __init__(self, browser: Browser):
         super().__init__(browser)
         self.nested_frames_button = Button(self.browser, self.NESTED_FRAMES_BUTTON,
-                               description="self.nested_frames_button")
+                                           description="IframePage -> nested_frames_button")
         self.alerts_frame_windows_button = Button(self.browser, self.ALERTS_FRAME_AND_WINDOWS,
-                                    description="self.alerts_frame_windows_button")
+                                                  description="IframePage -> alerts_frame_windows_button")
         self.parent_frame_element = WebElement(self.browser, self.PARENT_FRAME_LOCATOR,
-                                                    description="self.parent_frame_element")
+                                               description="IframePage -> parent_frame_element")
 
     def open_alerts_frame_windows(self):
         self.alerts_frame_windows_button.click()
@@ -41,33 +41,38 @@ class IframePage(BasePage):
         self.browser.switch_to_default_content()
 
     def open_frames(self):
-        self.frames = WebElement(self.browser, self.FRAMES, description="self.frames")
+        self.frames = WebElement(self.browser, self.FRAMES, description="IframePage -> frames")
         self.frames.click()
 
     def switch_and_check_big_frames_text(self):
-        self.big_frame_element = WebElement(self.browser, self.BIG_FRAME, description="self.big_frame_element")
+        self.big_frame_element = WebElement(self.browser, self.BIG_FRAME, description="IframePage -> big_frame_element")
         self.browser.switch_to_iframe(self.big_frame_element)
-        self.big_frame_text_element = WebElement(self.browser, self.BIG_FRAME_TEXT, description="self.big_frame_element")
+        self.big_frame_text_element = WebElement(self.browser, self.BIG_FRAME_TEXT,
+                                                 description="IframePage -> big_frame_text_element")
         text = self.big_frame_text_element.get_text()
         return text
 
     def switch_and_check_small_frames_text(self):
-        self.small_frame_element = WebElement(self.browser, self.SMALL_FRAME, description="self.small_frame_element")
+        self.small_frame_element = WebElement(self.browser, self.SMALL_FRAME,
+                                              description="IframePage -> small_frame_element")
         self.browser.switch_to_iframe(self.small_frame_element)
-        self.small_frame_text_element = WebElement(self.browser, self.SMALL_FRAME_TEXT,description="self.big_frame_element")
+        self.small_frame_text_element = WebElement(self.browser, self.SMALL_FRAME_TEXT,
+                                                   description="IframePage -> small_frame_text_element")
         text = self.small_frame_text_element.get_text()
         return text
 
     def switch_and_check_parent_nested_frames_text(self):
         self.browser.switch_to_iframe(self.parent_frame_element)
-        self.frame_parent_element = WebElement(self.browser, self.PARENT_TEXT, description="self.frame_parent_element")
+        self.frame_parent_element = WebElement(self.browser, self.PARENT_TEXT,
+                                               description="IframePage -> frame_parent_element")
         self.child_frame_element = WebElement(self.browser, self.CHILD_FRAME_LOCATOR,
-                                              description="self.child_frame_element")
+                                              description="IframePage -> child_frame_element")
         frame_parent_text = self.frame_parent_element.get_text()
         return frame_parent_text
 
     def switch_and_check_child_nested_frames_text(self):
         self.browser.switch_to_iframe(self.child_frame_element)
-        self.frame_child_element = WebElement(self.browser, self.CHILD_TEXT, description="self.frame_child_element")
+        self.frame_child_element = WebElement(self.browser, self.CHILD_TEXT,
+                                              description="IframePage -> frame_child_element")
         frame_child_text = self.frame_child_element.get_text()
         return frame_child_text

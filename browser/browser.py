@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoAlertPresentException, TimeoutException
 
+
 class Browser:
     DEFAULT_TIMEOUT = 10
     PAGE_LOAD_TIMEOUT = 100
@@ -113,32 +114,17 @@ class Browser:
 
     def confirm_alert(self):
         Logger.info(f"{self} confirm alert")
-        try:
-            self.switch_to_alert().accept()
-        except NoAlertPresentException:
-            Logger.warning("No alert was present when trying to confirm.")
-        except TimeoutException:
-            Logger.warning("Alert did not appear within the expected time.")
+        self.switch_to_alert().accept()
 
     def decline_alert(self):
         Logger.info(f"{self} decline alert")
-        try:
-            self.switch_to_alert().dismiss()
-        except NoAlertPresentException:
-            Logger.warning("No alert was present when trying to confirm.")
-        except TimeoutException:
-            Logger.warning("Alert did not appear within the expected time.")
+        self.switch_to_alert().dismiss()
 
     def send_keys_to_alert(self, text):
         Logger.info(f"{self} send_keys_to_alert: sending '{text}'")
-        try:
-            alert = self.switch_to_alert()
-            alert.send_keys(text)
-            Logger.info("Text sent to alert successfully.")
-        except NoAlertPresentException:
-            Logger.warning("No alert was present when trying to send keys.")
-        except TimeoutException:
-            Logger.warning("Alert did not appear within the expected time.")
+        alert = self.switch_to_alert()
+        alert.send_keys(text)
+        Logger.info("Text sent to alert successfully.")
 
     def go_back(self):
         Logger.info(f"{self}: go back to previous page")
@@ -147,6 +133,11 @@ class Browser:
         except WebDriverException as err:
             Logger.error(f"{self}: Error navigating back: {err}")
             raise
+
+    def scroll_down(self, scroll_distance):
+        Logger.info(f"{self}: scroll_down")
+        js = f"window.scrollBy(0, {scroll_distance});"
+        self._driver.execute_script(js)
 
     def __str__(self):
         return f"{self.__class__.__name__}{self._driver.session_id}"

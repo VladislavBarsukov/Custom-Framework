@@ -6,7 +6,7 @@ import pytest
 from browser.browser_factory import BrowserFactory, AvailableDriverName
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def browser():
     driver = BrowserFactory.get_driver(AvailableDriverName.CHROME, ["--start-maximized"])
     browser_instance = Browser(driver)

@@ -1,6 +1,5 @@
 import pytest
-from pages.auth_page import AuthPage  # Предполагаем, что у вас есть auth_page.py
-
+from pages.auth_page import AuthPage
 
 
 def test_basic_auth(browser):
@@ -10,7 +9,6 @@ def test_basic_auth(browser):
     base_url = "the-internet.herokuapp.com/basic_auth"
     url = f"https://{username}:{password}@{base_url}"
     browser.get(url)
-    b = AuthPage(browser)
-    element = b.is_success_auth()
+    auth_page = AuthPage(browser)
+    element = auth_page.is_success_auth()
     assert element.text == expected_text, f"Expected {expected_text}, get {element.text}"
-

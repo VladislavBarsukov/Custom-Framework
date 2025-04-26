@@ -11,12 +11,14 @@ from base_element.web_element import WebElement
 class ContextPage(BasePage):
     SLIDER_ELEMENT = '//*[@type="range"]'
     RESULT_SLIDER = 'range'
+
     def __init__(self, browser: Browser):
         super().__init__(browser)
         self.slider = WebElement(self.browser, self.SLIDER_ELEMENT,
-                               description="ContextPage -> figure button")
+                                 description="ContextPage -> figure button")
         self.result = WebElement(self.browser, self.RESULT_SLIDER,
                                  description="ContextPage -> figure button")
+
     def move_slider(self, x, y=0):
         self.slider.move_slider(x, y)
         return self.result.get_text()

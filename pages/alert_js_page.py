@@ -18,11 +18,11 @@ class AlertJsPage(BasePage):
     def __init__(self, browser: Browser):
         super().__init__(browser)
         self.js_alert = Button(self.browser, self.BUTTON_JS_ALERT,
-                               description="AlertPage -> js_alert")
+                               description="AlertJsPage -> js_alert")
         self.js_confirm = Button(self.browser, self.BUTTON_JS_CONFIRM,
-                                 description="AlertPage -> js_confirm")
+                                 description="AlertJsPage -> js_confirm")
         self.js_prompt = Button(self.browser, self.BUTTON_JS_PROMPT,
-                                description="AlertPage -> js_prompt")
+                                description="AlertJsPage -> js_prompt")
         self.result = WebElement(self.browser, self.RESULT_TEXT, description="AlertPage -> result")
 
     def get_js_alert(self):
