@@ -1,14 +1,16 @@
 import pytest
 from pages.auth_page import AuthPage
+import json
 
 
 def test_basic_auth(browser):
-    expected_text = "Congratulations! You must have the proper credentials."
     username = "admin"
     password = "admin"
-    base_url = "the-internet.herokuapp.com/basic_auth"
+    with open("urls.json", "r") as f:
+        urls = json.load(f)
+    base_url = urls["basic_auth_page"]
     url = f"https://{username}:{password}@{base_url}"
     browser.get(url)
     auth_page = AuthPage(browser)
     element = auth_page.is_success_auth()
-    assert element.text == expected_text, f"Expected {expected_text}, get {element.text}"
+    assert element == True, f"Expected {element} = True, get False"

@@ -11,7 +11,9 @@ class AvailableDriverName(StrEnum):
 class BrowserFactory:
 
     @staticmethod
-    def get_driver(driver_name: AvailableDriverName, options: list[str] = []):
+    def get_driver(driver_name: AvailableDriverName, options: list[str] | None):
+        if options is None:
+            options: list[str] = []
 
         Logger.info(f"Start WebDriver {driver_name} with options: {options}")
         if driver_name == AvailableDriverName.CHROME:

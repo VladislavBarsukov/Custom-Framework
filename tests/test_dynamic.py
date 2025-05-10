@@ -1,16 +1,16 @@
 import pytest
 from pages.dynamic_page import DynamicPage
+import json
 
 
 def test_dynamic(browser):
-    url = "https://the-internet.herokuapp.com/dynamic_content"
+    with open("urls.json", "r") as f:
+        urls = json.load(f)
+    url = urls["dynamic_page"]
     browser.get(url)
     dynamic_page = DynamicPage(browser)
-
     while True:
         browser.refresh()
-        img_1 = dynamic_page.get_img1()
-        img_2 = dynamic_page.get_img2()
-        img_3 = dynamic_page.get_img3()
-        if img_1 == img_2 and img_2 == img_3 and img_1 == img_3:
+        img = dynamic_page.get_img()
+        if len(set(img)) <= 1:
             break

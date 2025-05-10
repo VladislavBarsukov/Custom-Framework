@@ -3,10 +3,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from .base_page import BasePage
 from browser.browser import Browser
 from browser.browser_factory import BrowserFactory, AvailableDriverName
-from base_element.base_element import BaseElement
-from base_element.button import Button
-from base_element.input import Input
-from base_element.web_element import WebElement
+from elements.base_element import BaseElement
+from elements.button import Button
+from elements.input import Input
+from elements.web_element import WebElement
 
 
 class ContextPage(BasePage):

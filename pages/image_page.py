@@ -3,10 +3,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from .base_page import BasePage
 from browser.browser import Browser
 from browser.browser_factory import BrowserFactory, AvailableDriverName
-from base_element.base_element import BaseElement
-from base_element.button import Button
-from base_element.input import Input
-from base_element.web_element import WebElement
+from elements.base_element import BaseElement
+from elements.button import Button
+from elements.input import Input
+from elements.web_element import WebElement
 import os
 import autoit
 import subprocess
@@ -35,18 +35,14 @@ class ImagePage(BasePage):
         self.upload_element.send_keys(file_path)
         self.upload_button.click()
 
-    def click_and_upload_red_square(self, file_path):
-        autoit_script_path = os.path.join(os.getcwd(), "upload_1.exe")
+    def click_and_upload_red_square(self):
         self.red_square_button_click.click()
-        subprocess.run([autoit_script_path, file_path])
 
-    def drag_and_drop(self, file_path):
-        autoit_script_path = os.path.join(os.getcwd(), "upload_2.exe")
+    def drag_and_drop_location(self):
         location = self.red_square_button_click.get_location()
-        print(location['x'], location['y'])
-        target_x = location['x'] + 200
-        target_y = location['y'] + 300
-        subprocess.Popen([autoit_script_path, file_path, str(target_x), str(target_y)])
+        target_x = location['x'] + self.red_square_button_click.get_height() / 2
+        target_y = location['y'] + self.red_square_button_click.get_width() / 2
+        return [target_x, target_y]
 
     def upload_red_square(self, file_path):
         self.red_square_button.upload_file(file_path)

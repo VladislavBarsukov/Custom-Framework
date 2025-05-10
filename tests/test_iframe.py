@@ -1,9 +1,12 @@
 import pytest
 from pages.iframe_page import IframePage
+import json
 
 
 def test_iframe(browser):
-    url = "https://demoqa.com/"
+    with open("urls.json", "r") as f:
+        urls = json.load(f)
+    url = urls["iframe_page"]
     browser.get(url)
     iframe_page = IframePage(browser)
     iframe_page.open_alerts_frame_windows()

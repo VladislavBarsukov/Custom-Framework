@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebElement
+from selenium.webdriver.common.keys import Keys
 
 
 class BaseElement:
@@ -27,9 +28,9 @@ class BaseElement:
                 self.locator = (By.ID, locator)
         else:
             self.locator = locator
-
+        self.timeout = timeout if timeout is not None else self.DEFAULT_TIMEOUT
         self.description = description if description else str(locator)
-        self._wait = WebDriverWait(self.browser.driver, timeout=self.timeout)
+        self._wait = WebDriverWait(self.browser.driver, self.timeout)
 
     def __str__(self):
         return f"{self.__class__.__name__}{self.description}"
@@ -116,17 +117,6 @@ class BaseElement:
         Logger.info(f"{self}: attribute '{name}' = '{value}'")
         return value
 
-    def get_src(self):
-        Logger.info(f"{self}: get_img_src")
-        try:
-            element = self.wait_for_presence()
-            src_value = element.get_attribute("src")
-            Logger.info(f"{self}: src = '{src_value}'")
-            return src_value
-        except WebDriverException as err:
-            Logger.error(f"{self}: {err}")
-            raise
-
     def get_css_property(self, name):
         element = self.wait_for_presence()
         Logger.info(f"{self}: get_css_property")
@@ -149,24 +139,13 @@ class BaseElement:
             raise
 
     def move_to_element(self):
-        element = self.wait_for_presence()
+        element = self.wait_for_visible()
         Logger.info(f"{self}: move to element")
         try:
             action = ActionChains(self.browser.driver)
             action.move_to_element(element).perform()
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
-            raise
-
-    def find_elements(self):
-        Logger.info(f"{self}: Counting elements with locator: {self.locator}")
-        element = self.wait_for_presence()
-        try:
-            elements = element.find_elements(*self.locator)
-            Logger.info(f"{self}: Found {elements} elements")
-            return elements
-        except WebDriverException as err:
-            Logger.error(f"{self}: Error finding elements: {err}")
             raise
 
     def get_location(self):
@@ -179,3 +158,11 @@ class BaseElement:
             raise
         Logger.info(f"{self}: location = {location}")
         return location
+
+    def get_width(self):
+        element = self.wait_for_visible()
+        return element.size['width']
+
+    def get_height(self):
+        element = self.wait_for_visible()
+        return element.size['height']

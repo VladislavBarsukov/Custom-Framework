@@ -1,11 +1,15 @@
 import pytest
+import json
 from pages.image_page import ImagePage
 from pages.after_upload_image_page import AfterUploadImagePage
+from utils.file_upload_utils import UploadImageUtils
 import os
 
 
 def test_drag_and_drop(browser):
-    url = "https://the-internet.herokuapp.com/upload"
+    with open("urls.json", "r") as f:
+        urls = json.load(f)
+    url = urls["image_page"]
     browser.get(url)
     image_page = ImagePage(browser)
     file_name = "test_file.txt"
@@ -14,7 +18,9 @@ def test_drag_and_drop(browser):
     file_path = os.path.join(temp_dir, file_name)
     with open(file_path, "w") as f:
         f.write("This is a test file.")
-    image_page.drag_and_drop(file_path)
+    file_upload = UploadImageUtils()
+    location = image_page.drag_and_drop_location()
+    file_upload.drag_and_drop_upload(file_path, location[0], location[1])
     text = image_page.get_text_uploaded_file()
     success_element = image_page.get_success_mark()
     assert text == file_name, f"ERROR, expected text = {file_name}, get text = {text}"

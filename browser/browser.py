@@ -1,5 +1,5 @@
 import logging
-
+import time
 from selenium.common import WebDriverException
 from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
@@ -64,23 +64,39 @@ class Browser:
         self._driver.refresh()
 
     def switch_to_default_window(self):
-        Logger.info(f"{self} switch_to_default_window")
+        Logger.info(f"{self} switch to default window")
         try:
             self._driver.switch_to.window(self.main_handle)
         except WebDriverException as err:
             Logger.error(f"{self}: {err}")
             raise
 
+    def switch_to_window(self, title):
+        Logger.info(f'{self}: switch to window by {title}')
+        end_time = time.time() + self.PAGE_LOAD_TIMEOUT
+        while True:
+            handles = self._driver.window_handles
+            for handle in handles:
+                self._driver.switch_to.window(handle)
+            if self._driver.title == title:
+                Logger.info(f'{self}: new window handle = {self._driver.current_window_handle}')
+                return
+            if time.time() < end_time:
+                time.sleep(1)
+            else:
+                Logger.error(f"{self} window with {title} wasn't found")
+                raise ValueError(f"{self} window with {title} wasn't found")
+
     def switch_to_default_content(self):
-        Logger.info(f"{self} switch_to_default_content")
+        Logger.info(f"{self} switch to default content")
         self._driver.switch_to.default_content()
 
-    def switch_to_window(self, window_handle):
+    def switch_to_window_by_handle(self, window_handle):
         Logger.info(f"{self} switch to window {window_handle}")
         self._driver.switch_to.window(window_handle)
         self.main_handle = window_handle
 
-    def switch_to_windows(self, num: int):
+    def switch_to_window_by_index(self, num: int):
         Logger.info(f"{self} switch to window {num}")
         switch = self._driver.window_handles[num]
         self._driver.switch_to.window(switch)
@@ -96,11 +112,11 @@ class Browser:
         self._driver.save_screenshot(filepath)
 
     def switch_to_iframe(self, frame):
-        Logger.info(f"{self}: switch_to_iframe")
+        Logger.info(f"{self}: switch to iframe")
         return self._driver.switch_to.frame(frame.wait_for_presence())
 
     def wait_alert_present(self):
-        Logger.info(f"{self} wait_alert_present")
+        Logger.info(f"{self} wait alert present")
         return self._wait.until(expected_conditions.alert_is_present())
 
     def switch_to_alert(self):
@@ -121,7 +137,7 @@ class Browser:
         self.switch_to_alert().dismiss()
 
     def send_keys_to_alert(self, text):
-        Logger.info(f"{self} send_keys_to_alert: sending '{text}'")
+        Logger.info(f"{self} send keys to alert: sending '{text}'")
         alert = self.switch_to_alert()
         alert.send_keys(text)
         Logger.info("Text sent to alert successfully.")
@@ -134,10 +150,8 @@ class Browser:
             Logger.error(f"{self}: Error navigating back: {err}")
             raise
 
-    def scroll_down(self, scroll_distance):
-        Logger.info(f"{self}: scroll_down")
-        js = f"window.scrollBy(0, {scroll_distance});"
-        self._driver.execute_script(js)
+    def scroll_into_view(self, element):
+        self._driver.execute_script("arguments[0].scrollIntoView();", element.wait_for_presence())
 
     def __str__(self):
         return f"{self.__class__.__name__}{self._driver.session_id}"

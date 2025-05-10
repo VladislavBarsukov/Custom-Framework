@@ -1,6 +1,6 @@
 from logger.logger import Logger
 
-from base_element.base_element import BaseElement
+from elements.base_element import BaseElement
 from selenium.common import WebDriverException
 
 

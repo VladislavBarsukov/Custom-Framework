@@ -1,22 +1,23 @@
-import time
-
+from elements.multi_element import MultiWebElement
 from selenium.webdriver.support import expected_conditions as EC
 from .base_page import BasePage
 from browser.browser import Browser
 from browser.browser_factory import BrowserFactory, AvailableDriverName
-from base_element.base_element import BaseElement
-from base_element.button import Button
-from base_element.input import Input
-from base_element.web_element import WebElement
+from elements.base_element import BaseElement
+from elements.web_element import WebElement
 
 
 class ScrollPage(BasePage):
-    TEXT_ELEMENT = '//*[@class="jscroll-added"]'
+    TEXT_ELEMENTS = '//*[@class="jscroll-inner"]//div[{}]'
 
-    def __init__(self, browser: Browser):
-        super().__init__(browser)
-        self.text = WebElement(self.browser, self.TEXT_ELEMENT,
-                               description="ScrollPage -> text")
+    def find_text_elements(self):
+        self.texts = MultiWebElement(self.browser, self.TEXT_ELEMENTS,
+                                     description=f"img", timeout=0)
+        src = [i.get_text() for i in self.texts if len(i.get_text()) > 10]
+        return src
 
-    def find_elements(self):
-        return self.text.find_elements()
+    def find_last_element(self):
+        self.last_texts = MultiWebElement(self.browser, self.TEXT_ELEMENTS,
+                                          description=f"img", timeout=0)
+        src = [i for i in self.last_texts if len(i.get_text()) > 10]
+        return src[-1]
