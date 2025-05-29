@@ -128,16 +128,6 @@ class BaseElement:
         Logger.info(f"{self}: attribute '{name}' = '{value}'")
         return value
 
-    def move_slider(self, x, y):
-        element = self.wait_for_clickable()
-        Logger.info(f"{self}: move_slider")
-        try:
-            action = ActionChains(self.browser.driver)
-            action.click_and_hold(element).move_by_offset(x, y).release().perform()
-        except WebDriverException as err:
-            Logger.error(f"{self}: {err}")
-            raise
-
     def move_to_element(self):
         element = self.wait_for_visible()
         Logger.info(f"{self}: move to element")
@@ -166,3 +156,7 @@ class BaseElement:
     def get_height(self):
         element = self.wait_for_visible()
         return element.size['height']
+
+    def scroll_into_view(self):
+        element = self.wait_for_presence()
+        self.browser.execute_script("arguments[0].scrollIntoView();", element)

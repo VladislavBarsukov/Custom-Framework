@@ -1,3 +1,3 @@
 
 class Config:
-    BROWSER_MAX_WINDOW = ['--start-maximized']
+    BROWSER_MAX_WINDOW = '--start-maximized'

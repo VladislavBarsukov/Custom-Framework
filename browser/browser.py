@@ -150,8 +150,6 @@ class Browser:
             Logger.error(f"{self}: Error navigating back: {err}")
             raise
 
-    def scroll_into_view(self, element):
-        self._driver.execute_script("arguments[0].scrollIntoView();", element.wait_for_presence())
 
     def __str__(self):
         return f"{self.__class__.__name__}{self._driver.session_id}"

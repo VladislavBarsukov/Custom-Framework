@@ -25,4 +25,3 @@ class HooverPage(BasePage):
         self.user_url = WebElement(self.browser, self.USER_URL_LOCATOR.format(num),
                                    description="HooverPage -> user url")
         self.user_url.click()
-        return self.browser.driver.current_url

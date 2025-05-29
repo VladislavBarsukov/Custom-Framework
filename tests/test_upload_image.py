@@ -5,9 +5,7 @@ import os
 import json
 
 
-def test_image(browser):
-    with open("urls.json", "r") as f:
-        urls = json.load(f)
+def test_image(browser, urls):
     url = urls["image_page"]
     browser.get(url)
     image_page = ImagePage(browser)
@@ -23,5 +21,5 @@ def test_image(browser):
     image_page_after.wait_for_open()
     text = image_page_after.get_result_of_upload_text()
     file_name_text = image_page_after.get_result_of_upload_file()
-    assert text == "File Uploaded!", f"ERROR, expected text = File Uploaded!, get text = {text}"
-    assert file_name_text == file_name, f"ERROR, expected file_name_text = {file_name}, get file_name_text = {file_name}"
+    assert text == "File Uploaded!", f"Expected text = File Uploaded!, get text = {text}"
+    assert file_name_text == file_name, f"Expected file_name_text = {file_name}, get file_name_text = {file_name}"

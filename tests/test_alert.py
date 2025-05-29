@@ -3,9 +3,7 @@ from pages.alert_page import AlertPage
 import json
 
 
-def test_alerts(browser):
-    with open("urls.json", "r") as f:
-        urls = json.load(f)
+def test_alerts(browser, urls):
     url = urls["javascript_alerts_page"]
     text_for_prompt = "alert"
     browser.get(url)

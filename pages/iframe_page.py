@@ -1,4 +1,3 @@
-from selenium.webdriver.support import expected_conditions as EC
 from .base_page import BasePage
 from browser.browser import Browser
 from browser.browser_factory import BrowserFactory, AvailableDriverName
@@ -10,7 +9,6 @@ from elements.web_element import WebElement
 
 class IframePage(BasePage):
     NESTED_FRAMES_BUTTON = "//span[text()='Nested Frames']"
-    ALERTS_FRAME_AND_WINDOWS = '//*[contains(text(),"Alerts, Frame & Windows")]'
     PARENT_FRAME_LOCATOR = "frame1"
     CHILD_FRAME_LOCATOR = '//*[contains(@srcdoc, "<p>Child Iframe</p>")]'
     PARENT_TEXT = "//*[contains(text(), 'Parent frame')]"
@@ -26,8 +24,6 @@ class IframePage(BasePage):
         super().__init__(browser)
         self.nested_frames_button = Button(self.browser, self.NESTED_FRAMES_BUTTON,
                                            description="IframePage -> nested_frames_button")
-        self.alerts_frame_windows_button = Button(self.browser, self.ALERTS_FRAME_AND_WINDOWS,
-                                                  description="IframePage -> alerts_frame_windows_button")
         self.parent_frame_element = WebElement(self.browser, self.PARENT_FRAME_LOCATOR,
                                                description="IframePage -> parent_frame_element")
         self.big_frame_text_element = WebElement(self.browser, self.BIG_FRAME_TEXT_BY_ID,
@@ -53,28 +49,30 @@ class IframePage(BasePage):
     def open_nested_frames(self):
         self.nested_frames_button.click()
 
-    def switch_to_default(self):
-        self.browser.switch_to_default_content()
-
     def open_frames(self):
         self.frames.click()
 
-    def switch_and_check_big_frames_text(self):
-        self.browser.switch_to_iframe(self.big_frame_element)
-        text = self.big_frame_text_element.get_text()
-        return text
-
-    def switch_and_check_small_frames_text(self):
-        self.browser.switch_to_iframe(self.small_frame_element)
-        text = self.small_frame_text_element.get_text()
-        return text
-
-    def switch_and_check_parent_nested_frames_text(self):
+    def switch_and_get_parent_nested_frames_text(self):
         self.browser.switch_to_iframe(self.parent_frame_element)
         frame_parent_text = self.frame_parent_element.get_text()
+        self.browser.switch_to_default_content()
         return frame_parent_text
 
-    def switch_and_check_child_nested_frames_text(self):
+    def switch_and_get_child_nested_frames_text(self):
+        self.browser.switch_to_iframe(self.parent_frame_element)
         self.browser.switch_to_iframe(self.child_frame_element)
         frame_child_text = self.frame_child_element.get_text()
+        self.browser.switch_to_default_content()
         return frame_child_text
+
+    def switch_and_get_big_frames_text(self):
+        self.browser.switch_to_iframe(self.big_frame_element)
+        text = self.big_frame_text_element.get_text()
+        self.browser.switch_to_default_content()
+        return text
+
+    def switch_and_get_small_frames_text(self):
+        self.browser.switch_to_iframe(self.small_frame_element)
+        text = self.small_frame_text_element.get_text()
+        self.browser.switch_to_default_content()
+        return text

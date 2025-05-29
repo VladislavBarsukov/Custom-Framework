@@ -7,9 +7,7 @@ import json
 from utils.file_upload_utils import UploadImageUtils
 
 
-def test_image(browser):
-    with open("urls.json", "r") as f:
-        urls = json.load(f)
+def test_image(browser, urls):
     url = urls["image_page"]
     browser.get(url)
     image_page = ImagePage(browser)
@@ -22,8 +20,7 @@ def test_image(browser):
     image_page.click_and_upload_red_square()
     file_upload = UploadImageUtils()
     file_upload.upload_to_red_square(file_path)
-    time.sleep(2)  # ПРОБЛЕМА ИЗ_ЗА ОЖИДАНИЯ IS_EXIST 0
     text = image_page.get_text_uploaded_file()
     success_element = image_page.get_success_mark()
-    assert text == file_name, f"ERROR, expected text = {file_name}, get text = {text}"
-    assert success_element == "✔", "ERROR"
+    assert text == file_name, f"Expected text = {file_name}, get text = {text}"
+    assert success_element == "✔", f"Expected ✔, get {success_element}"

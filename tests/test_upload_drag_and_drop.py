@@ -6,9 +6,7 @@ from utils.file_upload_utils import UploadImageUtils
 import os
 
 
-def test_drag_and_drop(browser):
-    with open("urls.json", "r") as f:
-        urls = json.load(f)
+def test_drag_and_drop(browser, urls):
     url = urls["image_page"]
     browser.get(url)
     image_page = ImagePage(browser)
@@ -23,5 +21,5 @@ def test_drag_and_drop(browser):
     file_upload.drag_and_drop_upload(file_path, location[0], location[1])
     text = image_page.get_text_uploaded_file()
     success_element = image_page.get_success_mark()
-    assert text == file_name, f"ERROR, expected text = {file_name}, get text = {text}"
-    assert success_element == "✔", "ERROR"
+    assert text == file_name, f"Expected text = {file_name}, get text = {text}"
+    assert success_element == "✔", f"Expected ✔, get {success_element}"
